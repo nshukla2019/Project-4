@@ -35,9 +35,9 @@ int main(int argc, char* argv[]) {
 		// percentage printed AS AN INT
 	// default uses the read system call
 
-	size_t byte_chunk;
-	int fd;
-	char buf[BUFSIZE];
+	size_t byte_chunk; // this is to be used when user enters a num
+	int fd; // file descriptor
+	char buf[BUFSIZE]; //character array where the read content will be stored
 	int i;
 	int cnt;
 	int fileSize;
@@ -54,14 +54,16 @@ int main(int argc, char* argv[]) {
 		}
 
 		while((cnt = read(fd, buf, BUFSIZE)) > 0) {
-			for(i = 0; i < byte_chunk; i++) {
-				fileSize++;
+			fileSize = cnt; //inside or out
+			for(i = 0; i < BUFSIZE; i++) {
 				if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
-					total_print_chars++;
+					total_print_chars = total_print_chars + 1;
 				}
 			}
 		}
+		printf("%d printable characters out of %d bytes/n", total_print_chars, fileSize);
 
+	}
 
 
 
@@ -76,10 +78,6 @@ int main(int argc, char* argv[]) {
 				 total_print_chars++;
 			 }
 		}*/
-
-		printf("%d printable characters out of %d bytes/n", total_print_chars, fileSize);
-
-	}
 /*
 	if(argc > 2) {
 		if(strcmp(argv[3], "mmap") == 0) {
