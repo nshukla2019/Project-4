@@ -36,19 +36,36 @@ int main(int argc, char* argv[]) {
 	// default uses the read system call
 
 	size_t byte_chunk;
-	int file_descriptor;
-	int file_size = 0;
-	int total_print_chars = 0;
-	//char *buf;
-
+	int fd;
+	char buf[BUFSIZE];
+	int i;
+	int cnt;
+	int fileSize;
+	int total_print_chars;
 	// ./proj4 is first argument and file is second
 
 	if(argc < 3) {
-		if((file_descriptor = open(argv[1], O_RDONLY)) < 0) {
+		if((fd = open(argv[1], O_RDONLY)) < 0) {
 			printf("Error, file could not open");
 		}
 
-		int fd = open(argv[1], O_RDONLY);
+		else {
+			printf("File is open.");
+		}
+
+		while((cnt = read(fd, buf, BUFSIZE)) > 0) {
+			for(i = 0; i < byte_chunk; i++) {
+				fileSize++;
+				if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
+					total_print_chars++;
+				}
+			}
+		}
+
+
+
+
+		/*int fd = open(argv[1], O_RDONLY);
 
 		char buff[BUFSIZE];
 		int count = 0;
@@ -58,12 +75,12 @@ int main(int argc, char* argv[]) {
 			 if(isprint(buff[count]) > 0 || isspace(buff[count]) > 0) {
 				 total_print_chars++;
 			 }
-		}
+		}*/
 
-		printf("%d printable characters out of %d bytes/n", total_print_chars, file_size);
+		printf("%d printable characters out of %d bytes/n", total_print_chars, fileSize);
 
 	}
-
+/*
 	if(argc > 2) {
 		if(strcmp(argv[3], "mmap") == 0) {
 			byte_chunk = 0;
@@ -74,6 +91,6 @@ int main(int argc, char* argv[]) {
 	}
 
 
-	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
+	puts("!!!Hello World!!!")*/; /* prints !!!Hello World!!! */
 	return EXIT_SUCCESS;
 }
