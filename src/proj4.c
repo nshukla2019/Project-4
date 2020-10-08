@@ -62,16 +62,16 @@ int main(int argc, char* argv[]) {
 		while((cnt = read(fd, buf, BUFSIZE)) > 0) {
 			fileSize = cnt; //inside or out
 			for(i = 0; i < cnt; i++) {
-				if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
+				if(isprint(pchFile[i]) > 0 || isspace(pchFile[i]) > 0) {
 					total_print_chars = total_print_chars+1;
 				}
 			}
 		}
 
-		percentage = total_print_chars/fileSize;
+		percentage = (total_print_chars/fileSize)*100;
 
 		close(fd);
-		printf("%d printable characters out of %d bytes, %d/n", total_print_chars, fileSize, percentage);
+		printf("%d printable characters out of %d bytes, %d%/n", total_print_chars, fileSize, percentage);
 
 	}
 
@@ -79,8 +79,8 @@ int main(int argc, char* argv[]) {
 	// if input is mmap, use mmap() system call to map contents of srcfile to memory
 	// iterate through memory to count printable characters
 
-	else if (argc > 3) {
-		if(strcmp(argv[2], "mmap")) {
+	else if (argc == 3) {
+		if(strcmp(argv[2], "mmap") == 0) {
 			byte_chunk = 0;
 
 			if((fd = open(argv[1], O_RDONLY)) < 0) {
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
 			}
 
 			else {
-				printf("File Opened!");
+				printf("File Opened! \n");
 
 				int err = fstat(fd, &sb);
 
@@ -98,12 +98,20 @@ int main(int argc, char* argv[]) {
 					printf("Mapping Failed");
 				}
 				else {
+					fileSize = sb.st_size;
 					for (i = 0; i < sb.st_size; i++) {
-						if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
+						if(isprint(sb[i]) > 0 || isspace(sb[i]) > 0) {
 							total_print_chars = total_print_chars+1;
 						}
 					}
 				}
+
+				percentage = (total_print_chars/fileSize)*100;
+
+				close(fd);
+
+				printf("%d printable characters out of %d bytes, %d%/n", total_print_chars, fileSize, percentage);
+
 			}
 		}
 	}
