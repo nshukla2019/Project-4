@@ -114,40 +114,40 @@ int main(int argc, char* argv[]) {
 
 			}
 		}
-	}
 
-	else if ((byte_chunk = atoi(argv[2])) > 8192){
-		printf("Number of bytes of chunk is too large (exceeded 8192)\n");
-		printf("Setting to %d bytes\n", BUFSIZE);
-		byte_chunk = BUFSIZE;
+		else if ((byte_chunk = atoi(argv[2])) > 8192){
+			printf("Number of bytes of chunk is too large (exceeded 8192)\n");
+			printf("Setting to %d bytes\n", BUFSIZE);
+			byte_chunk = BUFSIZE;
+		}
+		else {
 
-	}
-	else {
-		byte_chunk = atoi(argv[2]);
+			byte_chunk = atoi(argv[2]);
 
-		if((fd = open(argv[1], O_RDONLY)) < 0) {
-					printf("Error, file could not open");
-				}
+			if((fd = open(argv[1], O_RDONLY)) < 0) {
+				printf("Error, file could not open");
+			}
 
-				else {
-					printf("File is open\n");
-				}
+			else {
+				printf("File is open\n");
+			}
 
-				while((cnt = read(fd, buf, byte_chunk)) > 0) {
-					fileSize = cnt; //inside or out
-					for(i = 0; i < cnt; i++) {
-						if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
-							total_print_chars = total_print_chars+1;
-						}
+			while((cnt = read(fd, buf, byte_chunk)) > 0) {
+				fileSize = cnt; //inside or out
+				for(i = 0; i < cnt; i++) {
+					if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
+						total_print_chars = total_print_chars+1;
 					}
 				}
+			}
 
-				percentage = (total_print_chars/fileSize)*100;
+			percentage = (total_print_chars/fileSize)*100;
 
-				close(fd);
-				printf("%d printable characters out of %d bytes, %d%% \n", total_print_chars, fileSize, percentage);
+			close(fd);
+			printf("%d printable characters out of %d bytes, %d%% \n", total_print_chars, fileSize, percentage);
 
 
+		}
 	}
 
 
