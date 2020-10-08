@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 		percentage = (total_print_chars/fileSize)*100;
 
 		close(fd);
-		printf("%d printable characters out of %d bytes, %% \n", total_print_chars, fileSize, percentage);
+		printf("%d printable characters out of %d bytes, %d%% \n", total_print_chars, fileSize, percentage);
 
 	}
 
@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
 
 				close(fd);
 
-				printf("%d printable characters out of %d bytes, %% \n", total_print_chars, fileSize, percentage);
+				printf("%d printable characters out of %d bytes, %d%% \n", total_print_chars, fileSize, percentage);
 
 			}
 		}
