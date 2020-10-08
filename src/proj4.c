@@ -17,6 +17,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
 
 #define BUFSIZE 1024
 
@@ -41,8 +42,13 @@ int main(int argc, char* argv[]) {
 	int i;
 	int cnt;
 	int fileSize;
-	int total_print_chars;
+	int total_print_chars=0;
+	int percentage;
 	// ./proj4 is first argument and file is second
+
+
+	char *pchFile;
+	struct stat sb;
 
 	if(argc < 3) {
 		if((fd = open(argv[1], O_RDONLY)) < 0) {
@@ -50,45 +56,62 @@ int main(int argc, char* argv[]) {
 		}
 
 		else {
-			printf("File is open.");
+			printf("File is open\n");
 		}
 
 		while((cnt = read(fd, buf, BUFSIZE)) > 0) {
 			fileSize = cnt; //inside or out
-			for(i = 0; i < BUFSIZE; i++) {
+			for(i = 0; i < cnt; i++) {
 				if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
-					total_print_chars = total_print_chars + 1;
+					total_print_chars = total_print_chars+1;
 				}
 			}
 		}
-		printf("%d printable characters out of %d bytes/n", total_print_chars, fileSize);
+
+		percentage = total_print_chars/fileSize;
+
+		close(fd);
+		printf("%d printable characters out of %d bytes, %d/n", total_print_chars, fileSize, percentage);
 
 	}
 
+	// mmap(NULL, BUFSIZE, sb.st_size, PROT_READ, MAP_SHARED, fd, 0
+	// if input is mmap, use mmap() system call to map contents of srcfile to memory
+	// iterate through memory to count printable characters
 
-
-		/*int fd = open(argv[1], O_RDONLY);
-
-		char buff[BUFSIZE];
-		int count = 0;
-
-		 for (count = 0; read(fd, &buff[count], 1) > 0; count++) {
-			 file_size += count;
-			 if(isprint(buff[count]) > 0 || isspace(buff[count]) > 0) {
-				 total_print_chars++;
-			 }
-		}*/
-/*
-	if(argc > 2) {
-		if(strcmp(argv[3], "mmap") == 0) {
+	else if (argc > 3) {
+		if(strcmp(argv[2], "mmap")) {
 			byte_chunk = 0;
-		}
-		else {
-			byte_chunk = atoi(argv[3]);
+
+			if((fd = open(argv[1], O_RDONLY)) < 0) {
+				printf("Error, file could not open");
+			}
+
+			else {
+				printf("File Opened!");
+
+				int err = fstat(fd, &sb);
+
+				pchFile = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
+
+				if(pchFile == "MAP_FAILED") {
+					printf("Mapping Failed");
+				}
+				else {
+					for (i = 0; i < sb.st_size; i++) {
+						if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
+							total_print_chars = total_print_chars+1;
+						}
+					}
+				}
+			}
 		}
 	}
 
+	/*else {
 
-	puts("!!!Hello World!!!")*/; /* prints !!!Hello World!!! */
+	}
+	*/
+
 	return EXIT_SUCCESS;
 }
