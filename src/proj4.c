@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
 		while((cnt = read(fd, buf, BUFSIZE)) > 0) {
 			fileSize = cnt; //inside or out
 			for(i = 0; i < cnt; i++) {
-				if(isprint(pchFile[i]) > 0 || isspace(pchFile[i]) > 0) {
+				if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
 					total_print_chars = total_print_chars+1;
 				}
 			}
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
 				else {
 					fileSize = sb.st_size;
 					for (i = 0; i < sb.st_size; i++) {
-						if(isprint(sb[i]) > 0 || isspace(sb[i]) > 0) {
+						if(isprint(pchFile[i]) > 0 || isspace(pchFile[i]) > 0) {
 							total_print_chars = total_print_chars+1;
 						}
 					}
