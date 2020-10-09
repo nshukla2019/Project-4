@@ -55,10 +55,6 @@ int main(int argc, char* argv[]) {
 			printf("Error, file could not open");
 		}
 
-		else {
-			printf("File is open\n");
-		}
-
 		while((cnt = read(fd, buf, BUFSIZE)) > 0) {
 			fileSize = cnt; //inside or out
 			for(i = 0; i < cnt; i++) {
@@ -88,8 +84,6 @@ int main(int argc, char* argv[]) {
 			}
 
 			else {
-				printf("File Opened! \n");
-
 				int err = fstat(fd, &sb);
 
 				pchFile = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
@@ -110,6 +104,10 @@ int main(int argc, char* argv[]) {
 
 				close(fd);
 
+				if(munmap(pchFile, sb.st_size) < 0) {
+					printf("Could not unmap memory");
+				}
+
 				printf("%d printable characters out of %d bytes, %d%% \n", total_print_chars, fileSize, percentage);
 
 			}
@@ -126,10 +124,6 @@ int main(int argc, char* argv[]) {
 
 			if((fd = open(argv[1], O_RDONLY)) < 0) {
 				printf("Error, file could not open");
-			}
-
-			else {
-				printf("File is open\n");
 			}
 
 			while((cnt = read(fd, buf, byte_chunk)) > 0) {
