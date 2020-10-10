@@ -41,10 +41,9 @@ int main(int argc, char* argv[]) {
 	char buf[BUFSIZE]; //character array where the read content will be stored
 	int i;
 	int cnt;
-	int fileSize;
+	int fileSize=0;
 	int total_print_chars=0;
 	int percentage;
-	int buf_filled = 0;
 	// ./proj4 is first argument and file is second
 
 
@@ -57,17 +56,17 @@ int main(int argc, char* argv[]) {
 		}
 
 		while((cnt = read(fd, buf, BUFSIZE)) > 0) {
-			fileSize = cnt; // bufsize is 1024 here and cnt works when bytes of file is less than 1024
+			 // bufsize is 1024 here and cnt works when bytes of file is less than 1024
 			// BUFSIZE = 1024 which is constant here and this gets loaded into buf which is the array which holds
 			for(i = 0; i < cnt; i++) {
+				fileSize = fileSize+1;
 				if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
-					buf_filled = buf_filled+1;
+
 					total_print_chars = total_print_chars+1;
 				}
 			}
 		}
 
-		buf_filled = fileSize;
 
 		percentage = (total_print_chars/fileSize)*100;
 
@@ -132,8 +131,9 @@ int main(int argc, char* argv[]) {
 			}
 
 			while((cnt = read(fd, buf, byte_chunk)) > 0) {
-				fileSize = cnt; //inside or out
+
 				for(i = 0; i < cnt; i++) {
+					fileSize = fileSize+1;
 					if(isprint(buf[i]) > 0 || isspace(buf[i]) > 0) {
 						total_print_chars = total_print_chars+1;
 					}
